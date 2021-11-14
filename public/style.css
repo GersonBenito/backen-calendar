@@ -1,0 +1,7 @@
+.contenido{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 26rem);
+    gap: 10px;
+    justify-items: center;
+    justify-content: center;
+}
