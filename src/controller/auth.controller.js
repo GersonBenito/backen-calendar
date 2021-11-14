@@ -1,5 +1,4 @@
 const { response } = require("express");
-const { validationResult } = require("express-validator");
 
 const obtenerUsuarios = async (req, res = response) =>{
 
@@ -28,14 +27,6 @@ const obtenerUsuarios = async (req, res = response) =>{
 const agregarUsuario = async (req, res = response) =>{
 
     try {
-        const errors = validationResult(req); // obtiendo los errores de los campos obligatorios
-        
-        if(!errors.isEmpty()){
-            return res.status(400).json({
-                status: 400,
-                errors: errors.mapped()
-            });
-        }
 
         const data = req.body;
 
@@ -88,14 +79,6 @@ const elimianrUsuario = async (req, res = response) =>{
 const loginUsuario = async (req, res = response) =>{
     try {
         
-        const errors = validationResult(req);
-        if(!errors.isEmpty()){
-            return res.status(400).json({
-                status: 400,
-                errors: errors.mapped()
-            });
-        }
-
         const data = req.body;
 
         return res.status(200).json({
