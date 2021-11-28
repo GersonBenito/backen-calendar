@@ -34,6 +34,13 @@ const tecnologias = [
         img: 'https://www.4webs.es/blog/wp-content/uploads/2017/09/nueva-beta-de-bootstrap-4.jpg',
         alt: 'bootstrap',
         url: 'https://getbootstrap.com/'
+    },
+    {
+        name: 'JWT',
+        description: 'Los tokens web JSON son un método RFC 7519 estándar de la industria abierto  para representar reclamaciones de forma segura entre dos partes. JWT.IO le permite decodificar, verificar y generar JWT.',
+        img: 'https://cdn.worldvectorlogo.com/logos/jwtio-json-web-token.svg',
+        alt: 'jsonwebtoken',
+        url: 'https://jwt.io/'
     }
 ];
 
