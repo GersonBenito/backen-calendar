@@ -152,8 +152,15 @@ const loginUsuario = async (req, res = response) =>{
 const renovarToken = async (req, res = response) =>{
     try {
         
+        const { uid, name } = req;
+
+        const token = await generarJWT(uid, name);
+
         return res.status(200).json({
             status: 200,
+            uid: uid,
+            name: name,
+            token: token,
             message: 'token renovado correctamente'
         });
 
