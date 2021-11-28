@@ -1,4 +1,6 @@
-const { response } = require("express");
+const { response } = require('express');
+const bcrypt = require('bcryptjs');
+const Usuario = require('../model/Usuario');
 
 const obtenerUsuarios = async (req, res = response) =>{
 
@@ -28,17 +30,37 @@ const agregarUsuario = async (req, res = response) =>{
 
     try {
 
-        const data = req.body;
+        const { email, password } = req.body;
+
+        let usuario = await Usuario.findOne({email});
+        
+        if(usuario){
+            
+            return res.status(400).json({
+                status: 400,
+                message: 'ya existe un usuario con ese correo'
+            });
+        }
+
+        usuario = new Usuario(req.body);
+        
+        // encriptar password
+        const salt = bcrypt.genSaltSync();
+        usuario.password = bcrypt.hashSync(password, salt);
+
+        await usuario.save();
 
         return res.status(201).json({
-            status: 201,
-            data: data,
+            status: 201, //cuando se graba un registro en base de datos
+            uid: usuario._id,
+            name: usuario.name,
             message: 'usuario agregado correctamente'
         });
 
     } catch (error) {
-        return res.status(400).json({
-            status: 400,
+        // console.log(error);
+        return res.status(500).json({
+            status: 500,
             message: 'ocurrio un error al agregar el usuario'
         });
     }
