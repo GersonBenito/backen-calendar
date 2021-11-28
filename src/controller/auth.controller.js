@@ -1,6 +1,7 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const Usuario = require('../model/Usuario');
+const { generarJWT } = require('../helpers/jwt');
 
 const obtenerUsuarios = async (req, res = response) =>{
 
@@ -50,15 +51,19 @@ const agregarUsuario = async (req, res = response) =>{
 
         await usuario.save();
 
+        // generar JWT
+        const token = await generarJWT(usuario._id, usuario.name);
+
         return res.status(201).json({
             status: 201, //cuando se graba un registro en base de datos
             uid: usuario._id,
             name: usuario.name,
+            token: token,
             message: 'usuario agregado correctamente'
         });
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         return res.status(500).json({
             status: 500,
             message: 'ocurrio un error al agregar el usuario'
@@ -101,15 +106,42 @@ const elimianrUsuario = async (req, res = response) =>{
 const loginUsuario = async (req, res = response) =>{
     try {
         
-        const data = req.body;
+        const { email, password } = req.body;
 
+        const usuario = await Usuario.findOne({email});
+        
+        if(!usuario){
+
+            return res.status(400).json({
+                status: 400, 
+                message: 'El usuario no existe con ese email'
+            });
+
+        }
+
+        // validar password
+        const validatePassword = bcrypt.compareSync( password, usuario.password );
+        if(!validatePassword){
+
+            return res.status(400).json({
+                status: 400,
+                message: 'La contrasena ingresado es incorrecto'
+            });
+
+        }
+
+        // generara JWT
+        const token = await generarJWT( usuario._id, usuario.name );
         return res.status(200).json({
             status: 200,
-            data: data,
+            uid: usuario._id,
+            name: usuario.name,
+            token: token,
             message: 'inicio de sesison correctamente'
         });
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({
             status: 400,
             message: 'ocurrio un error al iniciar sesion'
