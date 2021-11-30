@@ -6,4 +6,7 @@ const router = Router();
 const auth = require('./auth.router');
 router.use('/auth',auth);
 
+const eventos = require('./evento.router');
+router.use('/evento', eventos);
+
 module.exports = router;
